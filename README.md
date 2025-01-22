@@ -1,4 +1,6 @@
-# GPR-470-Solo-Project concept 1:
+# GPR-470-Solo-Project concepts:
+
+# Concept 1:
 
 ## Project Objective:
 The goal of this project idea would be to create a marching cube system in Unity with the ability to save and load in levels. I would also want to add the ability for the player to modify the terrain, with the added bonus of including an undo for any terrain modified. 
@@ -17,7 +19,7 @@ The main feature that I would like to get done for this project would be the mar
 * Video showcase
 
 
-# GPR-470-Solo-Project concept 2:
+# Concept 2:
 
 ## Project Objective:
 
@@ -37,17 +39,24 @@ The main feature that I would want to have in this project would be the ability 
 * Playable game
 * Video showcase
 
-# GPR-470-Solo-Project concept 3:
+# Concept 3:
 
 ## Project Objective:
 
+This project would involve making a game for the Game Boy Color. This would be an extension of a project that I have worked on before, where I worked on a basic framework to get a Gameboy emulator to display different colors on the screen. The Gameboy is programmed using GBZ80 assembly, which I have used before for that project. For the game, I would want to make it pretty simple, as assembly makes any task more complex to program. 
+
 ## Tools & Technologies:
 
-* Langauge:
+For the project, I would like to use a GameBoy emulator as well as an assembler to generate a Rom from the code. I was not a huge fan of the tools that I used last time for this, so I may look to try and find a different assembler. 
+
+* Langauge: GBZ80 assembly
 
 ## Scope:
 
+For this project, I would want to get a very basic game loop working. I would most likely try and recreate a game that was never available on the Gameboy. 
+
+
 ## Deliverables:
 
-* Playable game
+* Playable Rom
 * Video showcase
