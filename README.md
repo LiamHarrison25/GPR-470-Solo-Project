@@ -8,6 +8,7 @@ The idea for this project would be based on my work for one of the concepts that
 
 I would want to do this project in Unity, as the previous work I did on it was also in Unity. 
 * Langauge: C#
+* Unity Version: 6000.0.36f1
 
 ## Scope:
 
