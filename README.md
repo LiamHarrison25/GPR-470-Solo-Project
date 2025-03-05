@@ -25,4 +25,11 @@ The main feature that I would want to have in this project would be the ability 
 * Video showcase
 * Written out section on my portfolio website
 
+## Project Progress:
+
+* Basic grouping completed
+* Research into bin packing
+* started on formations
+* press e to stop the grouping and send the objects into a circle
+
 
