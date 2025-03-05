@@ -8,10 +8,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private InputSystem_Actions inputActions;
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private Transform orientation;
+    [SerializeField] private float playerHeight;
+    
+    public LayerMask whatIsGround;
+    bool grounded =false;
 
     private Vector2 movementInput;
     private Vector3 movementDirection;
-    private Vector3 appliedForce;
+    private Vector3 appliedForce = Vector3.zero;
 
     private void Awake()
     {
@@ -28,12 +32,28 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    public bool GetIsGrounded()
+    {
+        return grounded;
+    }
+
+    public float GetGroundDrag()
+    {
+        return 0.0f;
+    }
+
+    public Vector3 GetCurrentAppliedForce()
+    {
+        return appliedForce;
+    }
+
     private void FixedUpdate()
     {
-        movementInput = inputActions.Player.Move.ReadValue<Vector2>();
-        Vector3 velocity = new Vector3(movementInput.x * movementSpeed, rb.linearVelocity.z, movementInput.y * movementSpeed);
-        rb.linearVelocity = transform.TransformDirection(velocity);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         
+        movementInput = inputActions.Player.Move.ReadValue<Vector2>();
+        appliedForce = new Vector3(movementInput.x * movementSpeed, rb.linearVelocity.z, movementInput.y * movementSpeed);
+        rb.linearVelocity = transform.TransformDirection(appliedForce);
         
         // movementInput.y = 0f;
         // movementDirection = orientation.forward + orientation.right * movementInput.x;
