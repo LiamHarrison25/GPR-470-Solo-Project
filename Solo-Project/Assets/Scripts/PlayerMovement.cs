@@ -17,19 +17,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movementDirection;
     private Vector3 appliedForce = Vector3.zero;
 
-    private void Awake()
+    private void Start()
     {
-        inputActions = new InputSystem_Actions();
-    }
-
-    private void OnEnable()
-    {
-        inputActions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Player.Disable();
+        inputActions = InputManager.instance.GetInputActions();
     }
 
     public bool GetIsGrounded()

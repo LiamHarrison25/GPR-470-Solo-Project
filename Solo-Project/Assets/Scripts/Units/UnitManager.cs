@@ -1,4 +1,8 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
+using Random = UnityEngine.Random;
 
 public class UnitManager : MonoBehaviour
 {
@@ -7,7 +11,9 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private GameObject leaderObject;
     [SerializeField] private GameObject unitPrefab;
     [SerializeField] private PlayerMovement leaderMovement;
-    
+    [SerializeField] private InputSystem_Actions inputActions;
+
+    private int circleRadius = 5;
     
     private float randomRange = 10.0f;
     private Transform leaderTransform;
@@ -29,6 +35,7 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
+        inputActions = InputManager.instance.GetInputActions();
         SpawnUnits();
     }
 
@@ -84,10 +91,14 @@ public class UnitManager : MonoBehaviour
     
     private void CheckInput()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     CycleFormations();
-        // }
+        bool interact = inputActions.Player.Interact.WasPressedThisFrame(); //inputActions.Player.Interact.triggered;
+        
+        if (interact)
+        {
+            Debug.Log("Swapping formations");
+            //CycleFormations();
+            SwitchToCircleFormation();
+        }
     }
 
     #endregion
@@ -173,6 +184,28 @@ public class UnitManager : MonoBehaviour
         
         
         activelySwitchingFormations = false; //TODO: Temporarily here
+    }
+
+    private void SwitchToCircleFormation()
+    {
+        if (isBasicFormationActive)
+        {
+            isBasicFormationActive = false;
+            int i;
+            for (i = 0; i < unitList.Length; i++)
+            {
+                Vector3 targetPosition;
+                targetPosition.x = leaderTransform.position.x + circleRadius * Mathf.Cos(2 * Mathf.PI * i / unitList.Length);
+                targetPosition.y = leaderTransform.position.y;
+                targetPosition.z = leaderTransform.position.z + circleRadius * Math.Sin(2 * Mathf.PI * i / unitList.Length).ConvertTo<float>();
+
+                unitList[i].transform.position = targetPosition;
+            }
+        }
+        else
+        {
+            isBasicFormationActive = true;
+        }
     }
     
     #endregion
