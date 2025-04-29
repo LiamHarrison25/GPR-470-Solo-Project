@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private Transform orientation;
     [SerializeField] private float playerHeight;
+    [SerializeField] private Transform cameraTransform;
     
     public LayerMask whatIsGround;
     bool grounded =false;
@@ -42,7 +43,9 @@ public class PlayerMovement : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         movementInput = inputActions.Player.Move.ReadValue<Vector2>();
-        movementDirection = (orientation.forward * movementInput.y + orientation.right * movementInput.x).normalized;
+        Transform newOrientation = orientation;
+        newOrientation.forward = new Vector3(cameraTransform.forward.x, newOrientation.forward.y, cameraTransform.forward.z);
+        movementDirection = (newOrientation.forward * movementInput.y + cameraTransform.right * movementInput.x).normalized;
         appliedForce = movementDirection * movementSpeed; 
         rb.linearVelocity = appliedForce;
         
