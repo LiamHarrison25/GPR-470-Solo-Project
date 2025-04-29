@@ -40,10 +40,11 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-        
+
         movementInput = inputActions.Player.Move.ReadValue<Vector2>();
-        appliedForce = new Vector3(movementInput.x * movementSpeed, rb.linearVelocity.z, movementInput.y * movementSpeed);
-        rb.linearVelocity = transform.TransformDirection(appliedForce);
+        movementDirection = (orientation.forward * movementInput.y + orientation.right * movementInput.x).normalized;
+        appliedForce = movementDirection * movementSpeed; 
+        rb.linearVelocity = appliedForce;
         
         // movementInput.y = 0f;
         // movementDirection = orientation.forward + orientation.right * movementInput.x;
