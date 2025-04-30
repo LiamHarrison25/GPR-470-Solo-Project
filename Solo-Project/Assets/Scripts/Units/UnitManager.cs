@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
@@ -12,6 +14,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private GameObject unitPrefab;
     [SerializeField] private PlayerMovement leaderMovement;
     [SerializeField] private Transform leaderObjectTransform;
+    [SerializeField] private PlayerMovement playerMovement;
 
     private int circleRadius = 5;
     
@@ -63,6 +66,17 @@ public class UnitManager : MonoBehaviour
         return Random.Range(-randomRange, randomRange);
     }
 
+    private IEnumerator TransformDelay()
+    {
+        playerMovement.ToggleMovement(true);
+        
+        yield return new WaitForSeconds(1f);
+        
+        playerMovement.ToggleMovement(false);
+        
+        activelySwitchingFormations = false;
+    }
+    
     //SECTION: Updates
     #region Updates
 
@@ -83,10 +97,14 @@ public class UnitManager : MonoBehaviour
     {
         foreach (Unit u in unitList)
         {
-            if (isBasicFormationActive)
+            if (currentFormationID == 0)
             {
                 SteerBehavior(u);
                 MimicryBehavior(u);
+            }
+            else
+            {
+                MoveBehavior(u);
             }
             
         }
@@ -127,6 +145,11 @@ public class UnitManager : MonoBehaviour
         
         u.MoveWithLeader(leaderMovement.GetCurrentAppliedForce());
     }
+
+    private void MoveBehavior(Unit u)
+    {
+        u.MoveTowardsPoint();
+    }
     #endregion
 
     //SECTION: Formations
@@ -144,6 +167,8 @@ public class UnitManager : MonoBehaviour
             }
 
             //isBasicFormationActive = false;
+            
+            StartCoroutine(TransformDelay());
         
             switch(currentFormationID)
             {
@@ -175,10 +200,10 @@ public class UnitManager : MonoBehaviour
         {
             unitList[i].ResetVelocity();
             unitList[i].ToggleKinematics(false);
-            
-        }
+            unitList[i].ToggleMove(false);
 
-        activelySwitchingFormations = false; 
+        }
+        
     }
 
     private void SwitchToCubeFormation()
@@ -234,7 +259,10 @@ public class UnitManager : MonoBehaviour
                     }
                     else
                     {
-                        unitList[counter].transform.position = newPosition;
+                        unitList[counter].ToggleKinematics(false);
+                        unitList[counter].SetDestination(newPosition);
+                        unitList[counter].ToggleMove(true);
+                        //unitList[counter].transform.position = newPosition;
                         counter++;
                     }
                 }
@@ -249,11 +277,11 @@ public class UnitManager : MonoBehaviour
             }
         }
         
-        activelySwitchingFormations = false; 
     }
 
     private void SwitchToCircleFormation()
     {
+        activelySwitchingFormations = true;
         if (isBasicFormationActive)
         {
             isBasicFormationActive = false;
@@ -265,9 +293,12 @@ public class UnitManager : MonoBehaviour
                 targetPosition.y = leaderTransform.position.y;
                 targetPosition.z = leaderTransform.position.z + circleRadius * Math.Sin(2 * Mathf.PI * i / unitList.Length).ConvertTo<float>();
 
+                unitList[i].ToggleKinematics(false);
                 unitList[i].ResetVelocity();
-                unitList[i].ToggleKinematics(true);
-                unitList[i].transform.position = targetPosition;
+                //unitList[i].ToggleKinematics(true);
+                unitList[i].SetDestination(targetPosition);
+                unitList[i].ToggleMove(true);
+                //unitList[i].transform.position = targetPosition;
             }
         }
         else

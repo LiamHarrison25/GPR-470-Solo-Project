@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     
     public LayerMask whatIsGround;
     bool grounded =false;
+    private bool currentlyTransforming = false;
 
     private Vector2 movementInput;
     private Vector3 movementDirection;
@@ -28,6 +29,22 @@ public class PlayerMovement : MonoBehaviour
         return grounded;
     }
 
+    public void ToggleMovement(bool toggle)
+    {
+        currentlyTransforming = toggle;
+        
+        if (toggle)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+        else
+        {
+            rb.isKinematic = false;
+        }
+        
+    }
+
     public float GetGroundDrag()
     {
         return 0.0f;
@@ -40,25 +57,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if (!currentlyTransforming)
+        {
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        movementInput = inputActions.Player.Move.ReadValue<Vector2>();
-        Transform newOrientation = orientation;
-        newOrientation.forward = new Vector3(cameraTransform.forward.x, newOrientation.forward.y, cameraTransform.forward.z);
-        movementDirection = (newOrientation.forward * movementInput.y + cameraTransform.right * movementInput.x).normalized;
-        appliedForce = movementDirection * movementSpeed; 
-        rb.linearVelocity = appliedForce;
-        
-        // movementInput.y = 0f;
-        // movementDirection = orientation.forward + orientation.right * movementInput.x;
-        //
-        // appliedForce = movementDirection.normalized * (movementSpeed * 10);
-        // rb.AddForce(appliedForce, ForceMode.Force);
-        //rb.linearVelocity = movementInput * movementSpeed;
-    }
-
-    private void OnMove(InputValue value)
-    {
-        //movementInput = value.Get<Vector2>();
+            movementInput = inputActions.Player.Move.ReadValue<Vector2>();
+            Transform newOrientation = orientation;
+            newOrientation.forward = new Vector3(cameraTransform.forward.x, newOrientation.forward.y, cameraTransform.forward.z);
+            movementDirection = (newOrientation.forward * movementInput.y + cameraTransform.right * movementInput.x).normalized;
+            appliedForce = movementDirection * movementSpeed; 
+            rb.linearVelocity = appliedForce;
+        }
     }
 }
