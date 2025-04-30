@@ -20,7 +20,7 @@ public class UnitManager : MonoBehaviour
     private Transform leaderTransform;
     private float stopDistance = 3;
     private int currentFormationID = 0;
-    private int maxFormationID = 1;
+    private int maxFormationID = 2;
     private bool activelySwitchingFormations = false;
     private bool isBasicFormationActive = true;
     
@@ -184,27 +184,70 @@ public class UnitManager : MonoBehaviour
     private void SwitchToCubeFormation()
     {
         activelySwitchingFormations = true;
-
-        //TODO: Create the cube formation
         
         float radius = unitList[0].GetRadius();
         
-        Vector3 dimensions = new Vector3(radius, radius, radius);
+        float diameter = radius * 2;
         
-        float volume = unitList.Length * (radius * 2);
+        float volume = unitList.Length * diameter;
         
         // Volume of a cube: V = a^3
         // Length = cube root of the volume
 
-        float length = Mathf.Pow(volume, 1f / 3f); // Cube root of the volume
+        int length = (int) MathF.Ceiling(Mathf.Pow(unitList.Length, 1f / 3f)); // Cube root of the volume
+        //int unitLength = (int)(length / radius);
         
-        //TODO: Move the objects into the cube using the length
+        float cubeUnitSize = length * diameter;
         
-        //float perimeter = (numUnits * (unitList[0].GetRadius() * 2)) - (4 * (2 * unitList[0].GetRadius()));
+        Vector3 center = leaderTransform.position;
+        
+        //center.y = leaderTransform.position.y + (length * diameter * 0.5f);
+        
+        // Start at the bottom left
+        Vector3 startingPosition = center;
+        startingPosition.x = leaderTransform.position.x - (cubeUnitSize * 0.5f) + radius;
+        startingPosition.y = leaderTransform.position.y;
+        startingPosition.z = leaderTransform.position.z - (cubeUnitSize * 0.5f) + radius;
+        
+        
+        if (unitList.Length <= 0)
+        {
+            return;
+        }
 
-        //float sideWidth = perimeter / 4;
-
-        //float sideHeight = (perimeter / 4) + ((unitList[0].GetRadius() * 2) * 2); 
+        int i, j, k, counter = 0;
+        for (i = 0; i < length; i++)
+        {
+            for (j = 0; j < length; j++)
+            {
+                for (k = 0; k < length; k++)
+                {
+                    Vector3 newPosition = startingPosition;
+                    newPosition.x = startingPosition.x + (i * diameter); //+ (radius * (length % radius))));
+                    newPosition.y = startingPosition.y + (j * diameter); // + (radius * (length % radius))); //(length / diameter)
+                    newPosition.z = startingPosition.z + (k * diameter); //+ (radius * (length % radius))));
+                    
+                    
+                    if (counter >= unitList.Length)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        unitList[counter].transform.position = newPosition;
+                        counter++;
+                    }
+                }
+                if (counter >= unitList.Length)
+                {
+                    break;
+                }
+            }
+            if (counter >= unitList.Length)
+            {
+                break;
+            }
+        }
         
         activelySwitchingFormations = false; 
     }

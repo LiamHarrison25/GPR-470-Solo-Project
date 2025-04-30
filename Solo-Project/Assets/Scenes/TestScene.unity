@@ -436,7 +436,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 654795662309389910, guid: cab43de6caa37434b8049e369c828ce9, type: 3}
       propertyPath: numUnits
-      value: 20
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 654795662309389910, guid: cab43de6caa37434b8049e369c828ce9, type: 3}
       propertyPath: unitPrefab
