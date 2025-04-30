@@ -157,6 +157,9 @@ public class UnitManager : MonoBehaviour
                     //Debug.Log("Switching to square formation");
                     SwitchToCircleFormation();
                     break;
+                case 2:
+                    SwitchToCubeFormation();
+                    break;
             }
         }
     }
@@ -175,26 +178,35 @@ public class UnitManager : MonoBehaviour
             
         }
 
-        activelySwitchingFormations = false; //TODO: Temporarily here
+        activelySwitchingFormations = false; 
     }
 
-    private void SwitchToSquareFormation()
+    private void SwitchToCubeFormation()
     {
         activelySwitchingFormations = true;
 
-
-
-        float perimeter = (numUnits * (unitList[0].GetRadius() * 2)) - (4 * (2 * unitList[0].GetRadius()));
-
-        float sideWidth = perimeter / 4;
-
-        float sideHeight = (perimeter / 4) + ((unitList[0].GetRadius() * 2) * 2); 
+        //TODO: Create the cube formation
         
+        float radius = unitList[0].GetRadius();
         
+        Vector3 dimensions = new Vector3(radius, radius, radius);
+        
+        float volume = unitList.Length * (radius * 2);
+        
+        // Volume of a cube: V = a^3
+        // Length = cube root of the volume
 
+        float length = Mathf.Pow(volume, 1f / 3f); // Cube root of the volume
         
+        //TODO: Move the objects into the cube using the length
         
-        activelySwitchingFormations = false; //TODO: Temporarily here
+        //float perimeter = (numUnits * (unitList[0].GetRadius() * 2)) - (4 * (2 * unitList[0].GetRadius()));
+
+        //float sideWidth = perimeter / 4;
+
+        //float sideHeight = (perimeter / 4) + ((unitList[0].GetRadius() * 2) * 2); 
+        
+        activelySwitchingFormations = false; 
     }
 
     private void SwitchToCircleFormation()
