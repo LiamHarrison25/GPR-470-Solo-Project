@@ -162,7 +162,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8423939410964011215}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be6ea3a77f4f83f41b6614c1b8003ddd, type: 3}
   m_Name: 
@@ -170,6 +170,6 @@ MonoBehaviour:
   meshFilter: {fileID: 8038717897245213768}
   meshRenderer: {fileID: 3871360835241265567}
   squishIntensity: 1
-  mass: 1
+  mass: 2
   stiffness: 1
-  damping: 0.75
+  damping: 0.5

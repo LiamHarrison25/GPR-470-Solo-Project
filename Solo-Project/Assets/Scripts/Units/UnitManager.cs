@@ -6,15 +6,16 @@ using Random = UnityEngine.Random;
 
 public class UnitManager : MonoBehaviour
 {
-   [SerializeField] private Unit[] unitList;
+    [SerializeField] private Unit[] unitList;
     [SerializeField] private int numUnits = 10;
     [SerializeField] private GameObject leaderObject;
     [SerializeField] private GameObject unitPrefab;
     [SerializeField] private PlayerMovement leaderMovement;
-    [SerializeField] private InputSystem_Actions inputActions;
+    [SerializeField] private Transform leaderObjectTransform;
 
     private int circleRadius = 5;
     
+    private InputSystem_Actions inputActions;
     private float randomRange = 10.0f;
     private Transform leaderTransform;
     private float stopDistance = 3;
@@ -45,6 +46,7 @@ public class UnitManager : MonoBehaviour
         for (i = 0; i < numUnits; i++)
         {
             unitList[i] = Instantiate(unitPrefab, RandomVectorAdditive(leaderTransform.position), leaderObject.transform.rotation, leaderTransform/*this.gameObject.transform*/).GetComponent<Unit>();
+            unitList[i].transform.SetParent(leaderObjectTransform);
         }
     }
 
@@ -84,8 +86,9 @@ public class UnitManager : MonoBehaviour
             if (isBasicFormationActive)
             {
                 SteerBehavior(u);
+                MimicryBehavior(u);
             }
-            MimicryBehavior(u);
+            
         }
     }
     
@@ -96,8 +99,8 @@ public class UnitManager : MonoBehaviour
         if (interact)
         {
             Debug.Log("Swapping formations");
-            //CycleFormations();
-            SwitchToCircleFormation();
+            CycleFormations();
+            //SwitchToCircleFormation();
         }
     }
 
@@ -140,7 +143,7 @@ public class UnitManager : MonoBehaviour
                 currentFormationID = 0;
             }
 
-            isBasicFormationActive = false;
+            //isBasicFormationActive = false;
         
             switch(currentFormationID)
             {
@@ -152,7 +155,7 @@ public class UnitManager : MonoBehaviour
                 case 1:
                     //Square Formation
                     //Debug.Log("Switching to square formation");
-                    SwitchToSquareFormation();
+                    SwitchToCircleFormation();
                     break;
             }
         }
@@ -163,6 +166,14 @@ public class UnitManager : MonoBehaviour
         activelySwitchingFormations = true;
 
         isBasicFormationActive = true;
+
+        int i;
+        for (i = 0; i < unitList.Length; i++)
+        {
+            unitList[i].ResetVelocity();
+            unitList[i].ToggleKinematics(false);
+            
+        }
 
         activelySwitchingFormations = false; //TODO: Temporarily here
     }
@@ -199,6 +210,8 @@ public class UnitManager : MonoBehaviour
                 targetPosition.y = leaderTransform.position.y;
                 targetPosition.z = leaderTransform.position.z + circleRadius * Math.Sin(2 * Mathf.PI * i / unitList.Length).ConvertTo<float>();
 
+                unitList[i].ResetVelocity();
+                unitList[i].ToggleKinematics(true);
                 unitList[i].transform.position = targetPosition;
             }
         }

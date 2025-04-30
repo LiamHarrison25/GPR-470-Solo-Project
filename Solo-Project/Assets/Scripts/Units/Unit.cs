@@ -47,4 +47,14 @@ public class Unit : MonoBehaviour
     {
         return radius;
     }
+
+    public void ToggleKinematics(bool toggle)
+    {
+        rigidbody.isKinematic = toggle;
+    }
+
+    public void ResetVelocity()
+    {
+        rigidbody.linearVelocity = Vector3.zero;
+    }
 }
