@@ -34,7 +34,6 @@ public class Chunk : MonoBehaviour
         }
         
         mesh = meshFilter.sharedMesh; // NOTE: May want to use mesh here
-
         // Creates a new mesh if no mesh is set
         if (mesh == null)
         {
